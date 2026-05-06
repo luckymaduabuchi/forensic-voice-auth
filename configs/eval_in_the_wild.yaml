@@ -1,0 +1,38 @@
+model:
+  freeze_backbone: false
+  num_attention_heads: 4
+  embedding_dim: 256
+  backbone_name: pyannote/wespeaker-voxceleb-resnet34-LM
+
+data:
+  train_path: data/manifests/clean/train_manifest_clean.jsonl
+  val_path: data/manifests/clean/val_manifest_clean.jsonl
+  test_path: data/manifests/test_manifest.jsonl
+  test_asvspoof_path: data/manifests/test_in_the_wild_manifest.jsonl
+  train_asvspoof_path: data/manifests/clean/train_asvspoof_manifest_clean.jsonl
+  val_asvspoof_path: data/manifests/clean/val_asvspoof_manifest_clean.jsonl
+  sample_rate: 16000
+  segment_seconds: 2.0
+  project_root: .
+
+training:
+  batch_size: 128
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 4
+  amp: false
+  num_epochs: 50
+  der_eval_files: 50
+  balanced_sampler: true
+  learning_rate: 0.001
+  weight_decay: 0.01
+  temperature: 0.07
+  decay_steps: 25
+  decay_gamma: 0.5
+  seed: 42
+  checkpoint_dir: checkpoints
+  loss_weights:
+    contrastive: 1.0
+    authenticity: 1.0
+    diarization: 0.3

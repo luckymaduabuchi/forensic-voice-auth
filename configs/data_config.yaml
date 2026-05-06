@@ -1,0 +1,9 @@
+data:
+  train_path: data/manifests/clean/train_manifest_clean.jsonl
+  val_path: data/manifests/clean/val_manifest_clean.jsonl
+  test_path: data/manifests/test_manifest.jsonl
+  test_asvspoof_path: data/manifests/test_asvspoof_manifest.jsonl
+  train_asvspoof_path: data/manifests/clean/train_asvspoof_manifest_clean.jsonl
+  val_asvspoof_path: data/manifests/clean/val_asvspoof_manifest_clean.jsonl
+  sample_rate: 16000
+  segment_seconds: 2.0

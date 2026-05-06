@@ -1,0 +1,11 @@
+evaluation:
+  authenticity_threshold: 0.5
+  clustering:
+    method: agglomerative
+    linkage: ward
+    distance_threshold: 0.9
+  benchmarks:
+    - audio_evidence
+    - nist_cts
+    - robocall
+    - cross_model

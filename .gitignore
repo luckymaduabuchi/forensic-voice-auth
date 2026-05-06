@@ -1,0 +1,55 @@
+# Data — raw audio and manifests (too large for git)
+data/raw/
+data/asvspoof/
+data/voxconverse/
+data/in_the_wild/
+data/manifests/
+
+# Checkpoints — model weights and eval artifacts
+checkpoints/*.pth
+checkpoints/ablation_*/
+checkpoints/baseline_*/
+checkpoints/seed_*/
+checkpoints/logs/
+checkpoints/*.csv
+checkpoints/*.json
+checkpoints/*.log
+
+# Keep paper and scripts
+!paper/
+!scripts/
+!src/
+!configs/
+!tests/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# HuggingFace cache
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/*.ipynb
+
+# Misc
+*.DS_Store
+*.tmp
