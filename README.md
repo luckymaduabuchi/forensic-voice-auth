@@ -146,35 +146,64 @@ CUDA_VISIBLE_DEVICES=0 python -u scripts/evaluate.py \
 
 ### 2h: Per-track (DF and LA separately)
 
+Run all 4 sequentially — each saves its own result file. Set `PY` to your Python binary:
+
 ```bash
-# Joint — DF track
-CUDA_VISIBLE_DEVICES=0 python -u scripts/evaluate.py \
+PY=/home/lucky/work/miniconda3/envs/diar3_fix/bin/python  # adjust to your env
+
+# 1. Joint model on DF track
+CUDA_VISIBLE_DEVICES=0 $PY scripts/evaluate.py \
     --model checkpoints/best_forensic_score.pth \
     --config configs/eval_track_df.yaml \
-    --benchmark track_df --max-auth-samples 237615 --max-der-files 0 \
-    --decision-threshold 0.5 2>&1 | tee checkpoints/eval_joint_df.log
+    --benchmark track_df \
+    --max-auth-samples 200000 --max-der-files 0 \
+    --decision-threshold 0.5 \
+    2>&1 | tee checkpoints/eval_joint_df.log
+cp checkpoints/eval_track_df.json checkpoints/eval_joint_df_result.json
+cp checkpoints/raw_scores_track_df.csv checkpoints/raw_scores_joint_df.csv
 
-# Joint — LA track
-CUDA_VISIBLE_DEVICES=0 python -u scripts/evaluate.py \
+# 2. Joint model on LA track
+CUDA_VISIBLE_DEVICES=0 $PY scripts/evaluate.py \
     --model checkpoints/best_forensic_score.pth \
     --config configs/eval_track_la.yaml \
-    --benchmark track_la --max-auth-samples 92198 --max-der-files 0 \
-    --decision-threshold 0.5 2>&1 | tee checkpoints/eval_joint_la.log
+    --benchmark track_la \
+    --max-auth-samples 200000 --max-der-files 0 \
+    --decision-threshold 0.5 \
+    2>&1 | tee checkpoints/eval_joint_la.log
+cp checkpoints/eval_track_la.json checkpoints/eval_joint_la_result.json
+cp checkpoints/raw_scores_track_la.csv checkpoints/raw_scores_joint_la.csv
 
-# Deepfake-only — DF track
-CUDA_VISIBLE_DEVICES=0 python -u scripts/evaluate.py \
+# 3. Deepfake-only baseline on DF track
+CUDA_VISIBLE_DEVICES=0 $PY scripts/evaluate.py \
     --model checkpoints/baseline_spoof/best_f1.pth \
     --config configs/eval_track_df.yaml \
-    --benchmark track_df_baseline --max-auth-samples 237615 --max-der-files 0 \
-    --decision-threshold 0.5 2>&1 | tee checkpoints/eval_spoof_df.log
+    --benchmark track_df_baseline \
+    --max-auth-samples 200000 --max-der-files 0 \
+    --decision-threshold 0.5 \
+    2>&1 | tee checkpoints/eval_spoof_df.log
+cp checkpoints/eval_track_df_baseline.json checkpoints/eval_spoof_df_result.json
+cp checkpoints/raw_scores_track_df_baseline.csv checkpoints/raw_scores_spoof_df.csv
 
-# Deepfake-only — LA track
-CUDA_VISIBLE_DEVICES=0 python -u scripts/evaluate.py \
+# 4. Deepfake-only baseline on LA track
+CUDA_VISIBLE_DEVICES=0 $PY scripts/evaluate.py \
     --model checkpoints/baseline_spoof/best_f1.pth \
     --config configs/eval_track_la.yaml \
-    --benchmark track_la_baseline --max-auth-samples 92198 --max-der-files 0 \
-    --decision-threshold 0.5 2>&1 | tee checkpoints/eval_spoof_la.log
+    --benchmark track_la_baseline \
+    --max-auth-samples 200000 --max-der-files 0 \
+    --decision-threshold 0.5 \
+    2>&1 | tee checkpoints/eval_spoof_la.log
+cp checkpoints/eval_track_la_baseline.json checkpoints/eval_spoof_la_result.json
+cp checkpoints/raw_scores_track_la_baseline.csv checkpoints/raw_scores_spoof_la.csv
 ```
+
+Expected outputs (Table 1 of the paper):
+
+| Model | Track | F1 | EER (%) | ROC-AUC | minDCF |
+|-------|-------|----|---------|---------|--------|
+| ForensicVoice | DF | 0.600 | 15.4 | 0.938 | 0.440 |
+| ForensicVoice | LA | 0.913 | 8.8  | 0.971 | 0.181 |
+| Deepfake-only | DF | 0.711 | 11.2 | 0.965 | 0.438 |
+| Deepfake-only | LA | 0.914 | 8.0  | 0.979 | 0.169 |
 
 ### 2i: Commercial TTS qualitative probes
 
